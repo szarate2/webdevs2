@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html data-cloud9-id='1'>
+    <head data-cloud9-id='2'>
+        <title data-cloud9-id='5'>CTA Bus Tracker</title>
+        <style data-cloud9-id='6'>
+          .page-content {margin: 2px;}
+          .table {
+            border: 2.5px solid #000000;
+            text-align: center;
+          }
+          #dbData {width:100%;}
+        </style>
+    </head>
+    <body data-cloud9-id='3'>
+        <!-- Simple header with fixed tabs. -->
+        <div data-cloud9-id='7' class="mdl-layout mdl-js-layout mdl-layout--fixed-header
+                    mdl-layout--fixed-tabs">
+          <header data-cloud9-id='8' class="mdl-layout__header">
+            <div data-cloud9-id='9' class="mdl-layout__header-row">
+              <!-- Title -->
+              <span data-cloud9-id='10' class="mdl-layout-title">CTA Bus Tracker</span>
+            </div>
+            <!-- Tabs -->
+            <div data-cloud9-id='11' class="mdl-layout__tab-bar mdl-js-ripple-effect">
+              <a data-cloud9-id='12' href="#fixed-tab-1" class="mdl-layout__tab">Add Bus Stops</a>
+              <a data-cloud9-id='13' href="#fixed-tab-2" class="mdl-layout__tab is-active">Home</a>
+              
+              <a data-cloud9-id='14' href="#fixed-tab-3" class="mdl-layout__tab">Delete Bus Stops</a>
+              
+            </div>
+          </header>
+          <main data-cloud9-id='15' class="mdl-layout__content">
+            <section data-cloud9-id='16' class="mdl-layout__tab-panel is-active" id="fixed-tab-2">
+              <div data-cloud9-id='17' class="page-content">
+                  <h3 data-cloud9-id='18'>Bus Times</h3>
+                  <p data-cloud9-id='19'>The bus times for your selected bus will show up here</p>
+              </div>
+            </section>
+            <section data-cloud9-id='20' class="mdl-layout__tab-panel" id="fixed-tab-3">
+              <div data-cloud9-id='21' class="page-content">
+                  <h3 data-cloud9-id='22'>Manage Stops</h3>
+                  <p data-cloud9-id='23'>Here you can manage all the stops you've saved for your device.</p>
+                  <hr data-cloud9-id='24'>
+                  <table data-cloud9-id='25' class="table" id="dbData">
+                    <tr data-cloud9-id='26' class="table">
+                      <th data-cloud9-id='27' class="table">ID</th>
+                      <th data-cloud9-id='28' class="table">Route</th>
+                      <th data-cloud9-id='29' class="table">Direction</th>
+                      <th data-cloud9-id='30' class="table">Stop ID</th>
+                    </tr>
+                  </table>
+                  <br data-cloud9-id='31'>
+                  <button data-cloud9-id='32' class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" id="delete">
+                    Clear All
+                  </button>
+                  <hr data-cloud9-id='33'>
+                  <div data-cloud9-id='34' id="clearButtons"></div>
+              </div>
+            </section>
+            <section data-cloud9-id='35' class="mdl-layout__tab-panel" id="fixed-tab-1">
+              <div data-cloud9-id='36' class="page-content">
+                  <h3 data-cloud9-id='37'>Add Stops</h3>
+                  <p data-cloud9-id='38'>Select a route, direction, and stop to add to your list of stops.</p>
+                  <label data-cloud9-id='39'>Route:</label><br data-cloud9-id='40'>
+                  <select data-cloud9-id='41' id="route">
+                      <option data-cloud9-id='42' disabled selected>Choose a route</option>
+                  </select><br data-cloud9-id='43'><br data-cloud9-id='44'>
+                  <label data-cloud9-id='45'>Direction:</label><br data-cloud9-id='46'>
+                  <select data-cloud9-id='47' id="direction">
+                      <option data-cloud9-id='48' disabled selected>Choose a direction</option>
+                  </select><br data-cloud9-id='49'><br data-cloud9-id='50'>
+                  <label data-cloud9-id='51'>Stop:</label><br data-cloud9-id='52'>
+                  <select data-cloud9-id='53' id="stop">
+                      <option data-cloud9-id='54' disabled selected>Choose a stop</option>
+                  </select><br data-cloud9-id='55'><br data-cloud9-id='56'>
+                  <button data-cloud9-id='57' class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" id="addStop">
+                    Add
+                  </button>
+              </div>
+            </section>
+          </main>
+          <link data-cloud9-id='58' rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+          <link data-cloud9-id='59' rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+          <script data-cloud9-id='60' defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+          <script data-cloud9-id='61' src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+          <script data-cloud9-id='62' src="https://unpkg.com/dexie@latest/dist/dexie.js"></script>
+          <script data-cloud9-id='63'>
+              /* global $ global Dexie */
+              $(function() {
+                  var db = new Dexie("busDB");
+                  db.version(1).stores({
+                    stops: '++id, route, routeName, direction, stopId, stopName'
+                  });
+                  db.stops.toArray().then(function(array) {
+                      $.each(array, function(i, v) {
+                        var text = "<tr class='table clear'><td class='table'>"
+                        + v.id
+                        + "</td><td class='table clear'>"
+                        + v.route
+                        + "</td><td class='table clear'>"
+                        + v.direction
+                        + "</td><td class='table clear'>"
+                        + v.stopId
+                        + "</td></tr>";
+                        $("#dbData").append(text);
+                        $("#clearButtons").append("<button type='button' class='mdl-button mdl-js-button mdl-button--raised mdl-button--colored delStop clear' id='"
+                        + v.id
+                        + "'>Delete Stop (ID: "
+                        + v.id
+                        + ")</button><br class='clear'><button type='button' class='mdl-button mdl-js-button mdl-button--raised mdl-button--colored'>Test</button>");
+                      });
+                    });
+                  $("#direction").prop( "disabled", true );
+                  $("#stop").prop( "disabled", true );
+                  var passThrough = "https://polar-garden-75406.herokuapp.com/apiPassThru.php";
+                  var apiKey = "VP7Jg5tpX5SdMKRrsuEgS4WjY";
+                  $.ajax({
+                      url: passThrough,
+                      dataType: "json",
+                      method: "GET",
+                      data: {"apiEndpoint": "http://www.ctabustracker.com/bustime/api/v2/getroutes",
+                        "key": apiKey,
+                        "format": "json"
+                      } 
+                  }).done(function(data) {
+                    $.each(data["bustime-response"]["routes"], function(i, v) {
+                      $("#route").append("<option value='"
+                      + v.rt
+                      + "'>"
+                      + v.rt
+                      + " - "
+                      + v.rtnm
+                      + "</option>");
+                      routeName = v.rtnm;
+                    });
+                  });
+                  $("#route").change(function() {
+                    $( "#direction" ).prop( "disabled", false);
+                    $(".remove").remove();
+                    $(".remove2").remove();
+                    var route = $("#route").val();
+                    $.ajax({
+                      url: passThrough,
+                      dataType: "json",
+                      method: "GET",
+                      data: {
+                        "apiEndpoint": "http://www.ctabustracker.com/bustime/api/v2/getdirections",
+                        "key": apiKey,
+                        "format": "json",
+                        "rt": route
+                      }
+                    }).done(function(data) {
+                      $.each(data["bustime-response"]["directions"], function(i, v) {
+                        $("#direction").append("<option class='remove' value='"
+                        + v.dir
+                        + "'>"
+                        + v.dir
+                        + "</option>");
+                      });
+                    });
+                  });
+                  $("#direction").change(function() {
+                    $(".remove2").remove();
+                    $("#stop").prop( "disabled", false);
+                    var direction = $("#direction").val();
+                    var route = $("#route").val();
+                    $.ajax({
+                      url: passThrough,
+                      dataType: "json",
+                      method: "GET",
+                      data: {
+                        "apiEndpoint": "http://www.ctabustracker.com/bustime/api/v2/getstops",
+                        "key": apiKey,
+                        "format": "json",
+                        "rt": route,
+                        "dir": direction
+                      }
+                    }).done(function(data) {
+                      $.each(data["bustime-response"]["stops"], function(i, v) {
+                        $("#stop").append("<option class='remove2' value='"
+                        + v.stpid
+                        + "'>"
+                        + v.stpnm
+                        + "</option>");
+                      });
+                    });
+                  });
+                  $("#addStop").click(function() {
+                    $("#direction").prop( "disabled", true );
+                    $("#stop").prop( "disabled", true );
+                    $(".clear").remove();
+                    $(".remove .remove2").remove();
+                    db.stops.add({
+                      route: $("#route").val(),
+                      direction: $("#direction").val(),
+                      stopId: $("#stop").val(),
+                    });
+                    db.stops.toArray().then(function(array) {
+                      $.each(array, function(i, v) {
+                        var text = "<tr class='table clear'><td class='table'>"
+                        + v.id
+                        + "</td><td class='table clear'>"
+                        + v.route
+                        + "</td><td class='table clear'>"
+                        + v.direction
+                        + "</td><td class='table clear'>"
+                        + v.stopId
+                        + "</td></tr>";
+                        $("#dbData").append(text);
+                        $("#clearButtons").append("<button type='button' class='mdl-button mdl-js-button mdl-button--raised mdl-button--colored delStop clear' id='"
+                        + v.id
+                        + "'>Delete Stop (ID: "
+                        + v.id
+                        + ")</button><br class='clear'><button type='button' class='mdl-button mdl-js-button mdl-button--raised mdl-button--colored'>Test</button>");
+                      });
+                    });
+                  });
+                  $("#delete").click(function() {
+                    db.stops.clear();
+                    $(".remove").remove();
+                    $(".remove2").remove();
+                    $(".clear").remove();
+                  });
+                  $("button").click(function() {
+                      alert("Changes made to your bus stop list");
+                  });
+              });
+          </script>
+        </div>
+    </body>
+</html><script src="/_static/preview/livecss.js"></script>32
