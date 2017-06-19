@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<link rel="stylesheet" href="styles.css">
+<head>
+
+  <meta charset="utf-8">
+
+  <title>CtaBusTrackerApp</title>
+
+  <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+
+  <style> 
+  body {
+    background-color: green;
+}
+h1 {
+    color: white;
+}
+div {
+    color: white;
+ font-family: "Lucida Console", Monaco, monospace;
+    border: 1px solid powderblue;
+}
+  #rt152{
+    background-color: gold;
+    border: solid black 1px;
+    padding: 5px;
+    border-radius:2px;
+  }
+  #rt49{
+    background-color: gold;
+    border: solid black 1px;
+    padding: 5px;
+    border-radius:2px;
+  }
+  #rtX49{
+    background-color: gold;
+    border: solid black 1px;
+    padding: 5px;
+    border-radius:2px;
+  }
+  #rt52{
+    background-color: gold;
+    border: solid black 1px;
+    padding: 5px;
+    border-radius:2px;
+  }
+  #submit{border-radius:2px;}
+  </style>
+
+</head>
+<body>
+ <div style="text-align:center;style=">CTA Bus Routes</div>
+ <button id="submit">Bus Routes Out Of School</button></center>
+ <br>
+ 
+ <div id="rt152"></div>
+ 
+ <div id="rtX49"></div>
+ 
+ <div id="rt49"></div>
+ 
+ <div id="rt52"></div>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+      
+      <script>
+      $("#rt49").hide()
+      $("#rtX49").hide()
+      $("#rt152").hide()
+      
+      $("#rt52").hide()
+      
+      $("#submit").click(function() {
+         
+         $("#rt49").empty().show()
+         
+         $("#rtX49").empty().show()
+         
+         $("#rt152").empty().show()
+         
+         $("#rt52").empty().show()
+       
+         
+          var apiPassThruUrl = "https://polar-garden-75406.herokuapp.com/apiPassThru.php";
+          
+          var apiEndpoint = "http://ctabustracker.com/bustime/api/v2/getpredictions";
+          
+          
+          
+          
+          
+          $.ajax({
+             
+              url: apiPassThruUrl,
+             
+              dataType: "json",
+             
+              method: 'GET',
+             
+              data: {"apiEndpoint": apiEndpoint,
+             
+                      "key" : "YRyyQ5ibjDfRiZ5pZ9rzqmKiM",
+             
+                      "format":"json",
+             
+                      "rt":"49,X49,152,52",
+             
+                      "stpid":"8417,12527,15231"
+              }
+           
+           
+           
+            }).done (function (data) {
+             
+              console.log(data);
+             
+             $("#rt49").append("<h2>Bus 49</h2>")
+             
+             $("#rtX49").append("<h2>Bus X49</h2>")
+             
+             $("#rt152").append("<h2>Bus 152</h2>")
+             
+             $("#rt52").append("<h2>Bus 52</h2>")
+              $.each(data["bustime-response"]["prd"], function(i,v) {
+                  
+                  $("#rt" + v.rt).append("Route Number: " + v.rt
+                  +  "<br>" 
+                  + "Bus Stop: " + v.stpnm 
+                  + "<br>"
+                   +"Route Direction: " + v.rtdir 
+                  + "<br>"
+                  +  "Time left until arrival: " + v.prdctdn 
+                  + "<hr>");
+              });
+            });
+        });
+</script>
+ 
+</body>

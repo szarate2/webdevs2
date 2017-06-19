@@ -1,0 +1,181 @@
+<html>
+    <head>
+        <title>Find your Sport!</title>
+       <body background="https://img.clipartfox.com/5973a4252ca09c38f6b554102c392b25_sports-balls-clipart-sports-balls-images-clip-art_1768-1075.jpeg">
+<a href="https://img.clipartfox.com/5973a4252ca09c38f6b554102c392b25_sports-balls-clipart-sports-balls-images-clip-art_1768-1075.jpeg"></a>
+<body>
+        <style>
+         
+.sport {
+    background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+.soccer {background-color: #4CAF50;} /* Green */
+.baseball {background-color: #008CBA;} /* Blue */
+.hockey {background-color: #f44336;} /* Red */ 
+.football {background-color: #8B4513;} /* brown */ 
+.basketball {background-color: #FF6347;} /* orange */
+</style>
+</head>
+<body>
+
+<h2>Find Your Sport!</h2>
+<p>Select your Sport here and find the park with the desired field!</p>
+<button  id="soccer" class="sport soccer">Soccer!</button>
+<button id="baseball" class="sport baseball">Baseball!</button>
+<button id="hockey" class="sport hockey">Hockey!</button>
+<button id="football" class="sport football">Football!</button>
+<button id="basketball" class="sport basketball">Basketball!</button>
+
+</body>
+</html>
+
+    </head>
+    <body>
+   
+    
+    <!-- div for instructions and form -->
+    <div id="form">
+        
+    
+    <!-- a div to store the results -->
+    <div id="results">
+        
+        
+     
+    </div>
+    <div id="myMap" style="width:50%;height:300px;"></div>
+    <script>
+      function initMap() {
+        var uluru = {lat:41.862242718216685, lng:-87.62575866268054};
+        var map = new google.maps.Map(document.getElementById('myMap'), {
+          zoom: 8,
+          center: uluru
+        });
+        
+         var contentString= 
+        var marker = new google.maps.Marker({
+          position: uluru,
+          map: map
+        });
+      }
+    </script>
+  
+    
+    
+   <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCq4SLboeGXDtOifRn35HmQcJYBRr-6akQ&callback=initMap">
+    </script> 
+    
+</script>
+     
+     
+     
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script>
+ 
+
+    
+   http://coursesweb.net/jquery/get-attribute-id-class-name-title-src-jquery
+        
+ 
+
+    
+ 
+    
+        
+       
+        $(function () {    // don't execute code until DOM is ready
+            /*
+                most code should wait for the button click event,
+                but creating and setting some variables *can* be 
+                done when the page loads
+            */
+
+            // api endpoint for the towed vehicle data
+            var baseURL = 'https://data.cityofchicago.org/resource/p97q-qace.json';
+            
+            // optional filters we're appending: plate
+            var filters = '';
+            
+            // the url; we'll append the plate number in button click
+            var url = baseURL + filters;   
+            
+            console.log (url);
+
+            // we want to get the data and display on button click
+            $(".sport").on("click", function() {
+                
+                // each time we search, we need to clear the results
+                $("#results").html("");
+            
+         
+           
+                // jQuery command to retrieve json data
+                
+                $.getJSON(url)       // append the plateNum
+                    .done (function (data) {    // execute this function when getJSON is done
+                        
+                        console.log(data);
+                        
+                        var numRecords = data.length;  // the length of the array
+                        
+                        // notify of number of records
+                        var message = 
+                            "<p>Parks found: "
+                            + numRecords
+                            + "</p>"
+                        
+                        $("#results").append(message);
+                        
+                        
+                        // only loop records if count > 0
+                        if (numRecords > 0) {
+                            // loop through the records
+                            $.each (data , 
+                                function (index, value) {
+                                    // append content to the body 
+                                    var html = "<h2>" 
+                                        +"<em>"+ value.park_name + "</em>"
+                                        + "</h2>"
+                                        + "<p>" 
+                                        +"Park Number: "
+                                        +value.park_number
+                                        +"<br>"
+                                        + "Street Address: "
+                                        + value.street_address
+                                        + "<br>Zip: "
+                                        + value.zip
+                                        + "<br>Dog Friendly: "
+                                        + value.dog_friendly
+                                     
+                                   
+                        
+                                    $("#results").append(html);
+                          
+                         
+                                
+                                }  // end of function
+                            
+                            ); // end of each loop                            
+                        
+                        }   // end of if statement
+
+                    })  // end of getJSON
+            
+            })  // end of button click event
+        
+        }) // end of jQuery wrapper
+        
+        //  https://www.programmableweb.com/category/sports/apis?category=20016
+    </script>
+    </body>
+</html>
